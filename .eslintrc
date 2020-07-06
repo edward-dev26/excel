@@ -9,7 +9,10 @@
     "arrow-parens": "off",
     "comma-dangle": "off",
     "require-jsdoc": "off",
+    "no-trailing-spaces": "off",
+    "operator-linebreak": "off",
     "indent": ["error", 4],
+    "max-len": ["error", { "code": 120 }],
     "eol-last": ["error", "never"]
   },
   "extends": [
