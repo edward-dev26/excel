@@ -20,3 +20,29 @@ export function matrix($current, $target) {
         return acc;
     }, []);
 }
+
+export function nextSelector(key, currentId) {
+    const MIN_VALUE = 0;
+
+    let nextRow = currentId.row;
+    let nextCol = currentId.col;
+
+    switch (key) {
+    case 'Enter':
+    case 'ArrowDown':
+        nextRow++;
+        break;
+    case 'Tab':
+    case 'ArrowRight':
+        nextCol++;
+        break;
+    case 'ArrowLeft':
+        nextCol = nextCol === MIN_VALUE ? MIN_VALUE : --nextCol;
+        break;
+    case 'ArrowUp':
+        nextRow = nextRow === MIN_VALUE ? MIN_VALUE : --nextRow;
+        break;
+    }
+
+    return `[data-id="${nextRow}:${nextCol}"]`;
+}
