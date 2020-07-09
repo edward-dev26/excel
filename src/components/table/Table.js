@@ -4,6 +4,7 @@ import {resizeHandler} from '@/components/table/table.resize';
 import {isCell, matrix, nextSelector, shouldResize} from '@/components/table/table.functions';
 import {TableSelection} from '@/components/table/TableSelection';
 import {$} from '@core/dom';
+import {setColState, setRowState, setDataState, setCurrentText} from '@/redux/rootReducer';
 
 export class Table extends ExcelComponent {
     static className = 'excel__table';
@@ -20,7 +21,7 @@ export class Table extends ExcelComponent {
     }
 
     toHTML() {
-        return createTable(30);
+        return createTable(30, this.$getState());
     }
 
     prepare() {
@@ -36,6 +37,7 @@ export class Table extends ExcelComponent {
 
     handleFormulaInput(value) {
         this.selection.current.text(value);
+        this.changeCellValue(value);
     }
 
     handleFormulaEnter() {
@@ -44,12 +46,30 @@ export class Table extends ExcelComponent {
 
     selectCell($cell) {
         this.selection.select($cell);
-        this.$emit('table:select', this.selection.current.text());
+        this.$dispatch(setCurrentText(this.selection.current.text()));
+    }
+
+    async tableResize(e) {
+        const {type, ...data} = await resizeHandler(this.$root, e);
+
+        if (type === 'col') {
+            this.$dispatch(setColState(data));
+        } else {
+            this.$dispatch(setRowState(data));
+        }
+    }
+
+    changeCellValue(value) {
+        this.$dispatch(setDataState({
+            id: this.selection.current.id(),
+            value
+        }));
+        this.$dispatch(setCurrentText(value));
     }
 
     onMousedown(e) {
         if (shouldResize(e)) {
-            resizeHandler(this.$root, e);
+            this.tableResize(e);
         } else if (isCell(e)) {
             const $target = $(e.target);
 
@@ -62,7 +82,7 @@ export class Table extends ExcelComponent {
                 this.selection.select($target);
             }
 
-            this.$emit('table:select', this.selection.current.text());
+            this.$dispatch(setCurrentText(this.selection.current.text()));
         }
     }
 
@@ -79,6 +99,6 @@ export class Table extends ExcelComponent {
     }
 
     onInput(e) {
-        this.$emit('table:input', $(e.target).text());
+        this.changeCellValue($(e.target).text());
     }
 }
