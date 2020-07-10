@@ -11,9 +11,10 @@
     "require-jsdoc": "off",
     "no-trailing-spaces": "off",
     "operator-linebreak": "off",
-    "indent": ["error", 4],
+    "indent": ["error", 4, { "SwitchCase": 1 }],
     "max-len": ["error", { "code": 120 }],
-    "eol-last": ["error", "never"]
+    "eol-last": ["error", "never"],
+    "no-debugger": "off"
   },
   "extends": [
     "eslint:recommended",

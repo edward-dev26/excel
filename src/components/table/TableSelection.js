@@ -24,4 +24,12 @@ export class TableSelection {
         $els.forEach($el => $el.addClass(TableSelection.activeClassName));
         // this.current = $els[$els.length -1];
     }
+
+    applyStyle(style) {
+        this.group.forEach($el => $el.css(style));
+    }
+
+    get selectedIds() {
+        return this.group.map($el => $el.id());
+    }
 }
