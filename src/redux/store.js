@@ -1,12 +1,27 @@
 import {createStore} from '@core/createStore';
 import rootReducer from '@/redux/rootReducer';
 import {storage} from '@core/utils';
+import {defaultStyles, defaultTitle} from '@/constants';
 
 const initialState = {
     colState: {},
     rowState: {},
     dataState: {},
-    currentText: ''
+    stylesState: {},
+    currentStyles: defaultStyles,
+    currentText: '',
+    tableTitle: defaultTitle
 };
 
-export const store = createStore(rootReducer, storage('excel-state') || initialState);
+function normalizeState(state) {
+    return {
+        ...state,
+        currentText: '',
+        currentStyles: defaultStyles,
+    };
+}
+
+const storageState = storage('excel-state');
+const state = storageState ? normalizeState(storageState) : initialState;
+
+export const store = createStore(rootReducer, state);

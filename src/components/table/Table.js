@@ -4,7 +4,9 @@ import {resizeHandler} from '@/components/table/table.resize';
 import {isCell, matrix, nextSelector, shouldResize} from '@/components/table/table.functions';
 import {TableSelection} from '@/components/table/TableSelection';
 import {$} from '@core/dom';
-import {setColState, setRowState, setDataState, setCurrentText} from '@/redux/rootReducer';
+import {setColState, setCurrentStyles, setCurrentText, setDataState, setRowState, setStyle} from '@/redux/rootReducer';
+import {defaultStyles} from '@/constants';
+import {parse} from '@core/parse';
 
 export class Table extends ExcelComponent {
     static className = 'excel__table';
@@ -33,10 +35,17 @@ export class Table extends ExcelComponent {
         this.selectCell(this.$root.find('[data-id="0:0"]'));
         this.$on('formula:input', this.handleFormulaInput);
         this.$on('formula:enter', this.handleFormulaEnter);
+        this.$on('toolbar:apply_style', value => {
+            this.selection.applyStyle(value);
+            this.$dispatch(setStyle({value, ids: this.selection.selectedIds}));
+            this.$dispatch(setCurrentStyles(value));
+        });
     }
 
     handleFormulaInput(value) {
-        this.selection.current.text(value);
+        const parsed = parse(value);
+
+        this.selection.current.text(`${parsed}`);
         this.changeCellValue(value);
     }
 
@@ -46,7 +55,10 @@ export class Table extends ExcelComponent {
 
     selectCell($cell) {
         this.selection.select($cell);
-        this.$dispatch(setCurrentText(this.selection.current.text()));
+        this.$dispatch(setCurrentText(this.selection.current.data.value));
+        const styles = this.selection.current.getStyles(Object.keys(defaultStyles));
+
+        this.$dispatch(setCurrentStyles(styles));
     }
 
     async tableResize(e) {
@@ -65,6 +77,7 @@ export class Table extends ExcelComponent {
             value
         }));
         this.$dispatch(setCurrentText(value));
+        this.selection.current.attr('data-value', value);
     }
 
     onMousedown(e) {
@@ -79,10 +92,8 @@ export class Table extends ExcelComponent {
 
                 this.selection.selectGroup(cells);
             } else {
-                this.selection.select($target);
+                this.selectCell($target);
             }
-
-            this.$dispatch(setCurrentText(this.selection.current.text()));
         }
     }
 

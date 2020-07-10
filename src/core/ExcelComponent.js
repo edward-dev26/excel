@@ -38,13 +38,15 @@ export class ExcelComponent extends DOMListener {
         return state;
     }
 
-    storeChanged() {}
+    storeChanged() {
+    }
 
     isWatching(key) {
         return this.subscribe.includes(key);
     }
 
-    prepare() {}
+    prepare() {
+    }
 
     init() {
         this.initDOMListeners();

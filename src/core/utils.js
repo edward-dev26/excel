@@ -31,3 +31,28 @@ export function isEqual(a, b) {
 
     return a === b;
 }
+
+export function camelToDashCase(string) {
+    return string.replace(/([A-Z])/g, g => `-${g[0].toLowerCase()}`);
+}
+
+export function toInlineStyles(styles = {}) {
+    return Object.keys(styles)
+        .map(key => `${camelToDashCase(key)}: ${styles[key]}`)
+        .join(';');
+}
+
+export function debounce(fn, delay) {
+    let timeout;
+
+    return function(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            // eslint-disable-next-line no-invalid-this
+            fn.apply(this, args);
+        };
+
+        clearTimeout(timeout);
+        timeout = setTimeout(later, delay);
+    };
+}
