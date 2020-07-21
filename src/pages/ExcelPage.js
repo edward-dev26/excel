@@ -6,7 +6,7 @@ import {Toolbar} from '@/components/toolbar/Toolbar';
 import {Formula} from '@/components/formula/Formula';
 import {Table} from '@/components/table/Table';
 import {getState} from '@/redux/store';
-import {createStore} from '@core/createStore';
+import {createStore} from '@core/store/createStore';
 import rootReducer from '@/redux/rootReducer';
 
 export class ExcelPage extends Page {
