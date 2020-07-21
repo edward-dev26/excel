@@ -1,4 +1,3 @@
-import {storage} from '@core/utils';
 import {defaultStyles, defaultTitle} from '@/constants';
 
 const initialState = {
@@ -20,8 +19,6 @@ function normalizeState(state) {
     };
 }
 
-export function getState(excelKey) {
-    const storageState = storage(excelKey);
-
-    return storageState ? normalizeState(storageState) : {...initialState};
+export function normalizeInitialState(state) {
+    return state ? normalizeState(state) : {...initialState};
 }
