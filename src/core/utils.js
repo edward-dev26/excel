@@ -56,3 +56,11 @@ export function debounce(fn, delay) {
         timeout = setTimeout(later, delay);
     };
 }
+
+export function storageName(params) {
+    return `excel:${params}`;
+}
+
+export function preventDefault(e) {
+    e.preventDefault();
+}

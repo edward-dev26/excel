@@ -1,7 +1,8 @@
 import {ExcelComponent} from '@core/ExcelComponent';
 import {$} from '@core/dom';
 import {setTableTitle} from '@/redux/rootReducer';
-import {debounce} from '@core/utils';
+import {debounce, storageName} from '@core/utils';
+import {ActiveRoute} from '@core/router /ActiveRoute';
 
 export class Header extends ExcelComponent {
     static className = 'excel__header';
@@ -9,7 +10,7 @@ export class Header extends ExcelComponent {
     constructor($root, options) {
         super($root, {
             name: 'Header',
-            listeners: ['input'],
+            listeners: ['input', 'click'],
             subscribe: ['tableTitle'],
             ...options
         });
@@ -23,11 +24,11 @@ export class Header extends ExcelComponent {
         return `
             <input id="title_input" type="text" class="input" value="${this.$getState('tableTitle')}">
             <div>
-                <div class="button">
-                    <i class="material-icons">delete</i>
+                <div class="button" data-button="delete">
+                    <i data-button="delete" class="material-icons">delete</i>
                 </div>
-                <div class="button">
-                    <i class="material-icons">exit_to_app</i>
+                <div class="button" data-button="exit">
+                    <i data-button="exit" class="material-icons">exit_to_app</i>
                 </div>
             </div>
         `;
@@ -35,5 +36,20 @@ export class Header extends ExcelComponent {
 
     onInput(e) {
         this.$dispatch(setTableTitle($(e.target).text()));
+    }
+
+    onClick(e) {
+        const type = $(e.target).data.button;
+
+        if (type === 'delete') {
+            const isConfirmed = confirm('Are you sure you want to delete table?');
+
+            if (isConfirmed) {
+                localStorage.removeItem(storageName(ActiveRoute.param));
+                ActiveRoute.push('');
+            }
+        } else if (type === 'exit') {
+            ActiveRoute.push('');
+        }
     }
 }

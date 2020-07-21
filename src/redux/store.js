@@ -1,5 +1,3 @@
-import {createStore} from '@core/createStore';
-import rootReducer from '@/redux/rootReducer';
 import {storage} from '@core/utils';
 import {defaultStyles, defaultTitle} from '@/constants';
 
@@ -10,7 +8,8 @@ const initialState = {
     stylesState: {},
     currentStyles: defaultStyles,
     currentText: '',
-    tableTitle: defaultTitle
+    tableTitle: defaultTitle,
+    openedDate: new Date().toJSON()
 };
 
 function normalizeState(state) {
@@ -21,7 +20,8 @@ function normalizeState(state) {
     };
 }
 
-const storageState = storage('excel-state');
-const state = storageState ? normalizeState(storageState) : initialState;
+export function getState(excelKey) {
+    const storageState = storage(excelKey);
 
-export const store = createStore(rootReducer, state);
+    return storageState ? normalizeState(storageState) : {...initialState};
+}
