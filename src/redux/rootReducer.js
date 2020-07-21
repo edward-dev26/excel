@@ -5,6 +5,7 @@ const SET_CURRENT_TEXT = 'SET_CURRENT_TEXT';
 const SET_STYLE = 'SET_STYLE';
 const SET_CURRENT_STYLES = 'SET_CURRENT_STYLES';
 const SET_TABLE_TITLE = 'SET_TABLE_TITLE';
+const UPDATE_DATE = 'UPDATE_DATE';
 
 const rootReducer = (state, action) => {
     switch (action.type) {
@@ -35,6 +36,11 @@ const rootReducer = (state, action) => {
                 stylesState: {...state.stylesState, ...value}
             };
         }
+        case UPDATE_DATE:
+            return {
+                ...state,
+                openedDate: new Date().toJSON()
+            };
         default:
             return state;
     }
@@ -54,5 +60,6 @@ export const setCurrentText = (currentText) => ({type: SET_CURRENT_TEXT, payload
 export const setCurrentStyles = (currentStyles) => ({type: SET_CURRENT_STYLES, payload: currentStyles});
 export const setStyle = (dataStyle) => ({type: SET_STYLE, payload: dataStyle});
 export const setTableTitle = (tableTitle) => ({type: SET_TABLE_TITLE, payload: {tableTitle}});
+export const updateDate = () => ({type: UPDATE_DATE});
 
 export default rootReducer;
